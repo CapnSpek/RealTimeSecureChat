@@ -1,4 +1,4 @@
-package server.utils;
+package com.realtimesecurechat.utils;
 
 import java.util.concurrent.ConcurrentHashMap;
 

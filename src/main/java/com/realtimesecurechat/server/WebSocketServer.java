@@ -1,8 +1,9 @@
-package server;
+package com.realtimesecurechat.server;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.realtimesecurechat.utils.BiDirectionalMap;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -16,7 +17,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import server.utils.BiDirectionalMap;
 
 import java.security.Security;
 

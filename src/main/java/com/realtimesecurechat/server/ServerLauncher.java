@@ -1,4 +1,4 @@
-package server;
+package com.realtimesecurechat.server;
 
 import org.glassfish.tyrus.server.Server;
 import java.util.HashMap;

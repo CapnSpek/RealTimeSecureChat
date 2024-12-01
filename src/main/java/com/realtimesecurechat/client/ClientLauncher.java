@@ -1,4 +1,4 @@
-package client;
+package com.realtimesecurechat.client;
 
 import java.net.URI;
 import java.util.Scanner;
