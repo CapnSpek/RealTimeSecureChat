@@ -157,12 +157,107 @@ func processMessage(msg Message, conn net.Conn) {
 	switch msg.Type {
 	case "getInfo":
 		// Provide connection details for the Java Client
-		log.Printf("Received 'getInfo' command from Java Client %s", msg.From)
+		log.Printf("Received 'getInfo' command from Java Client")
 		provideConnectionInfo(msg.From)
+	case "connect":
+		// Handle connection requests between peers
+		log.Printf("Received 'connect' command from Java Client")
+		connectPeers(msg)
 	default:
 		log.Printf("Unknown command type: %s", msg.Type)
 		sendError(conn, "Unknown command type")
 	}
+}
+
+func connectPeers(msg Message) {
+	// Parse connection details from the message payload
+	var connectionDetails struct {
+		SDP           string   `json:"sdp"`
+		ICECandidates []string `json:"iceCandidates"`
+	}
+
+	err := json.Unmarshal([]byte(msg.Payload), &connectionDetails)
+	if err != nil {
+		log.Printf("Failed to parse connection details: %v", err)
+		sendError(clientConn, "Invalid connection details")
+		return
+	}
+
+	// Extract the user from the Message object directly
+	user := msg.To // Assuming the `To` field contains the target user's ID
+	if user == "" {
+		log.Printf("Missing user field in message")
+		sendError(clientConn, "Missing user field in message")
+		return
+	}
+
+	// Retrieve or create a PeerConnection for the user
+	clientMutex.Lock()
+	peerConnection, exists := peerConnections[user]
+	if !exists {
+		// Create a new PeerConnection if one does not already exist
+		config := webrtc.Configuration{
+			ICEServers: []webrtc.ICEServer{
+				{URLs: []string{"stun:stun.l.google.com:19302"}},
+			},
+		}
+		peerConnection, err = webrtc.NewPeerConnection(config)
+		if err != nil {
+			log.Printf("Error creating PeerConnection: %v", err)
+			sendError(clientConn, "Failed to create PeerConnection")
+			clientMutex.Unlock()
+			return
+		}
+
+		// Track ICE candidates
+		peerConnection.OnICECandidate(func(candidate *webrtc.ICECandidate) {
+			if candidate != nil {
+				log.Printf("Generated ICE candidate for %s: %v", user, candidate.ToJSON().Candidate)
+			}
+		})
+
+		peerConnections[user] = peerConnection
+	}
+	clientMutex.Unlock()
+
+	// Set the remote SDP description
+	err = peerConnection.SetRemoteDescription(webrtc.SessionDescription{
+		Type: webrtc.SDPTypeOffer,
+		SDP:  connectionDetails.SDP,
+	})
+	if err != nil {
+		log.Printf("Failed to set remote description for %s: %v", user, err)
+		sendError(clientConn, "Failed to set remote description")
+		return
+	}
+
+	// Add ICE candidates
+	for _, candidate := range connectionDetails.ICECandidates {
+		err = peerConnection.AddICECandidate(webrtc.ICECandidateInit{
+			Candidate: candidate,
+		})
+		if err != nil {
+			log.Printf("Failed to add ICE candidate for %s: %v", user, err)
+		}
+	}
+
+	// Create or retrieve a DataChannel
+	dataChannel, err := peerConnection.CreateDataChannel("dataChannel", nil)
+	if err != nil {
+		log.Printf("Failed to create data channel for %s: %v", user, err)
+		sendError(clientConn, "Failed to create data channel")
+		return
+	}
+
+	// Setup DataChannel event handlers
+	dataChannel.OnOpen(func() {
+		log.Printf("DataChannel opened for %s", user)
+	})
+	dataChannel.OnMessage(func(msg webrtc.DataChannelMessage) {
+		log.Printf("Received message on DataChannel from %s: %s", user, string(msg.Data))
+	})
+
+	log.Printf("Connection established with %s", user)
 }
 
 /*

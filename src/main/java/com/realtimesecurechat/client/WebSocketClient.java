@@ -106,11 +106,11 @@ public class WebSocketClient {
 
     private void processConnectionInfo(JsonNode message) {
         try {
+            String user = message.get("user").asText();
             this.connectionDetails = message.get("payload").asText();
-            System.out.println("Received connection info: " + connectionDetails);
+            System.out.println("Received connection info: " + connectionDetails + " from: " + user);
 
-            // Forward the connection details to the central server (or next peer)
-            // forwardConnectionInfo(connectionDetails);
+            forwardConnectionInfoToGoServer(connectionDetails, user);
         } catch (Exception e) {
             System.err.println("Failed to process connection info: " + e.getMessage());
             e.printStackTrace();
@@ -166,14 +166,39 @@ public class WebSocketClient {
         }
     }
 
-    private void forwardConnectionInfo(String connectionDetails) {
-        // Forward connection info to the central WebSocket server
-        Map<String, String> message = new HashMap<>();
-        message.put("messageType", "Forward connection info");
-        message.put("connectionDetails", connectionDetails);
+    /*
+    * Forward connection details to the Go Server for processing
+    * @param connectionDetails The connection details to forward
+    * @param user The user who sent the connection details
+    * JSON Structure:
+    * {
+    *   "messageType": "connect",
+    *   "connectionDetails": "SDP/ICE information",
+    *   "user": "User ID"
+    * }
+     */
 
-        sendSignedMessage(message);
-        System.out.println("Forwarded connection info to the central server.");
+    private void forwardConnectionInfoToGoServer(String connectionDetails, String user) {
+        // Forward connection info to the central WebSocket server
+        try {
+            Map<String, String> message = new HashMap<>();
+            message.put("messageType", "connect");
+            message.put("connectionDetails", connectionDetails);
+            message.put("user", user);
+
+            // Convert the command to JSON
+            String messageJson = objectMapper.writeValueAsString(message);
+
+            // Send the JSON to the Go Server via the TCP socket
+            goServerWriter.write(messageJson);
+            goServerWriter.newLine();
+            goServerWriter.flush();
+
+            System.out.println("Forwarded connection info to the Go Server.");
+        } catch (IOException e) {
+            System.err.println("Failed to send connection details to the Go Server.");
+            e.printStackTrace();
+        }
     }
 
     public void requestConnection(String targetUserId) {
