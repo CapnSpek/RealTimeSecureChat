@@ -109,7 +109,7 @@ public class WebSocketClient {
             System.out.println("Received connection info: " + connectionDetails);
 
             // Forward the connection details to the central server (or next peer)
-            forwardConnectionInfo(connectionDetails);
+            // forwardConnectionInfo(connectionDetails);
         } catch (Exception e) {
             System.err.println("Failed to process connection info: " + e.getMessage());
             e.printStackTrace();
@@ -129,16 +129,23 @@ public class WebSocketClient {
         this.session = session;
         System.out.println("Connected to server: " + session.getId());
 
-        // Send initial registration message with client ID and public key
+        // Perform registration
+        performRegistration();
+    }
+
+    private void performRegistration() {
+        // Prompt user for client ID
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter your client user ID: ");
         clientUserId = scanner.nextLine();
 
+        // Prepare registration message
         Map<String, String> message = new HashMap<>();
         message.put("messageType", "Register");
         message.put("userId", clientUserId);
         message.put("publicKey", Base64.getEncoder().encodeToString(publicKey.getEncoded()));
 
+        // Send the registration message
         sendSignedMessage(message);
     }
 
@@ -206,6 +213,9 @@ public class WebSocketClient {
                     System.out.println("Server confirmation: " + jsonMessage.get("message").asText());
                     break;
 
+                case "Approval":
+                    handleApproval(jsonMessage);
+
                 default:
                     System.err.println("Unhandled messageType: " + messageType);
                     break;
@@ -214,6 +224,31 @@ public class WebSocketClient {
             System.err.println("Failed to process message from server.");
             e.printStackTrace();
         }
+    }
+
+
+    private void handleApproval(JsonNode jsonMessage) {
+        try {
+            String requesterUserId = jsonMessage.get("requesterUserId").asText();
+            String encryptedConnectionDetails = jsonMessage.get("connectionDetails").asText();
+
+            // Decrypt the connection details using the private key
+            String decryptedConnectionDetails = decryptMessage(encryptedConnectionDetails);
+
+            System.out.println("Received connection approval from: " + requesterUserId);
+            System.out.println("Decrypted connection details: " + decryptedConnectionDetails);
+
+            // Additional processing of connection details (e.g., parse SDP/ICE information)
+            processConnectionDetails(decryptedConnectionDetails);
+        } catch (Exception e) {
+            System.err.println("Failed to handle approval message.");
+            e.printStackTrace();
+        }
+    }
+
+    private void processConnectionDetails(String connectionDetails) {
+        // Add logic to handle or parse the decrypted connection details (SDP/ICE)
+        System.out.println("Processing connection details: " + connectionDetails);
     }
 
     private void handleReceivedConnectionInfo(JsonNode jsonMessage) {
