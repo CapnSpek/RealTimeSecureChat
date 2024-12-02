@@ -106,11 +106,8 @@ public class WebSocketClient {
 
     private void processConnectionInfo(JsonNode message) {
         try {
-            String user = message.get("user").asText();
             this.connectionDetails = message.get("payload").asText();
-            System.out.println("Received connection info: " + connectionDetails + " from: " + user);
-
-            forwardConnectionInfoToGoServer(connectionDetails, user);
+            System.out.println("Received connection info: " + connectionDetails);
         } catch (Exception e) {
             System.err.println("Failed to process connection info: " + e.getMessage());
             e.printStackTrace();
@@ -265,16 +262,28 @@ public class WebSocketClient {
             System.out.println("Decrypted connection details: " + decryptedConnectionDetails);
 
             // Additional processing of connection details (e.g., parse SDP/ICE information)
-            processConnectionDetails(decryptedConnectionDetails);
+            processConnectionDetails(decryptedConnectionDetails, approverUserId);
         } catch (Exception e) {
             System.err.println("Failed to handle approval message.");
             e.printStackTrace();
         }
     }
 
-    private void processConnectionDetails(String connectionDetails) {
+    /*
+     * Forward connection details to the Go Server for processing
+     * @param connectionDetails The connection details to forward
+     * @param user The user who sent the connection details
+     * JSON Structure:
+     * {
+     *   "messageType": "connect",
+     *   "connectionDetails": "SDP/ICE information",
+     *   "user": "User ID"
+     * }
+     */
+    private void processConnectionDetails(String connectionDetails, String approverUserId) {
         // Add logic to handle or parse the decrypted connection details (SDP/ICE)
         System.out.println("Processing connection details: " + connectionDetails);
+        forwardConnectionInfoToGoServer(connectionDetails, approverUserId);
     }
 
     private void handleReceivedConnectionInfo(JsonNode jsonMessage) {
