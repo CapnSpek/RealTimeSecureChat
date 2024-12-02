@@ -307,8 +307,6 @@ public class WebSocketClient {
             return;
         }
         try {
-            // Get connection details from the GO Server
-            String connectionDetails = "Sample connection details";
             Cipher cipher = Cipher.getInstance("ECIES", "BC");
             cipher.init(Cipher.ENCRYPT_MODE, requesterPublicKey);
             byte[] encryptedDetails = cipher.doFinal(connectionDetails.getBytes());
