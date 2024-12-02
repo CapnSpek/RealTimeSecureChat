@@ -33,6 +33,7 @@ public class WebSocketClient {
     private final BufferedReader goServerReader; // Reader for Go Server responses
     private final BufferedWriter goServerWriter; // Writer for sending commands to Go Server
     private String clientUserId;
+    private String connectionDetails;
 
     public WebSocketClient(URI endpointURI, String goServerHost, int goServerPort) {
         try {
@@ -105,7 +106,7 @@ public class WebSocketClient {
 
     private void processConnectionInfo(JsonNode message) {
         try {
-            String connectionDetails = message.get("payload").asText();
+            this.connectionDetails = message.get("payload").asText();
             System.out.println("Received connection info: " + connectionDetails);
 
             // Forward the connection details to the central server (or next peer)
@@ -229,13 +230,13 @@ public class WebSocketClient {
 
     private void handleApproval(JsonNode jsonMessage) {
         try {
-            String requesterUserId = jsonMessage.get("requesterUserId").asText();
+            String approverUserId = jsonMessage.get("user").asText();
             String encryptedConnectionDetails = jsonMessage.get("connectionDetails").asText();
 
             // Decrypt the connection details using the private key
             String decryptedConnectionDetails = decryptMessage(encryptedConnectionDetails);
 
-            System.out.println("Received connection approval from: " + requesterUserId);
+            System.out.println("Received connection approval from: " + approverUserId);
             System.out.println("Decrypted connection details: " + decryptedConnectionDetails);
 
             // Additional processing of connection details (e.g., parse SDP/ICE information)
