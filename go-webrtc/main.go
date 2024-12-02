@@ -231,18 +231,30 @@ func provideConnectionInfo(clientID string) {
 	// Store the PeerConnection in the map
 	peerConnections[clientID] = peerConnection
 
-	// Prepare the response payload with SDP and ICE candidates
-	payload := map[string]interface{}{
-		"sdp":           offer.SDP,
-		"iceCandidates": iceCandidates,
-	}
+	// Wait for ICE gathering to complete
+	peerConnection.OnICEGatheringStateChange(func(state webrtc.ICEGathererState) {
+		if state == webrtc.ICEGathererStateComplete {
+			// Prepare the response payload with SDP and ICE candidates
+			log.Printf("SDP: %s", offer.SDP)
+			log.Printf("Final ICE Candidates: %v", iceCandidates)
 
-	// Send the connection info to the Java Client
-	payloadData, _ := json.Marshal(payload)
-	sendClientMessage("connectionInfo", clientID, "", string(payloadData))
-	log.Printf("Connection info sent to Java Client %s", clientID)
-	log.Printf("SDP: %s", offer.SDP)
-	log.Printf("ICE Candidates: %v", iceCandidates)
+			payload := map[string]interface{}{
+				"sdp":           offer.SDP,
+				"iceCandidates": iceCandidates,
+			}
+
+			// Send the connection info to the Java Client
+			payloadData, err := json.Marshal(payload)
+			if err != nil {
+				log.Printf("Error marshaling JSON: %v", err)
+				return
+			}
+
+			log.Printf("Connection info: %s", string(payloadData))
+			sendClientMessage("connectionInfo", clientID, "", string(payloadData))
+			log.Printf("Connection info sent to Java Client %s", clientID)
+		}
+	})
 }
 
 /*
