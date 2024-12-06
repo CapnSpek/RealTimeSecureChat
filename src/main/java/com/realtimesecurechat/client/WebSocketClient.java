@@ -188,8 +188,6 @@ public class WebSocketClient {
             PublicKey requesterPublicKey = requesterPublicKeys.get(requesterUserId);
             if (requesterPublicKey == null) return;
 
-            String connectionDetails = "localhost:" + peerSocketManager.getPort();
-
             Cipher cipher = Cipher.getInstance("ECIES", "BC");
             cipher.init(Cipher.ENCRYPT_MODE, requesterPublicKey);
             byte[] encryptedDetails = cipher.doFinal(connectionDetails.getBytes());

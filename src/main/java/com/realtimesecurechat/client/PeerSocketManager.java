@@ -42,6 +42,7 @@ public class PeerSocketManager {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             writer.write("Hi from Peer\n");
             writer.flush();
+            System.out.println("Sent message to peer: Hi from Peer");
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String response = reader.readLine();
@@ -59,6 +60,7 @@ public class PeerSocketManager {
             System.out.println("Received from peer: " + message);
 
             writer.write("Hello back!\n");
+            System.out.println("Sent to peer: Hello back!");
             writer.flush();
 
         } catch (IOException e) {
