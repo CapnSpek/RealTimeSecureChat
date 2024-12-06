@@ -3,6 +3,7 @@ package com.realtimesecurechat.client;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.InetAddress;
 
 public class PeerSocketManager {
 
@@ -19,7 +20,7 @@ public class PeerSocketManager {
 
     public void startServer() {
         try {
-            serverSocket = new ServerSocket(port);
+            serverSocket = new ServerSocket(port, 50, InetAddress.getByName("0.0.0.0"));
             System.out.println("Peer server started on port " + port);
 
             new Thread(() -> {

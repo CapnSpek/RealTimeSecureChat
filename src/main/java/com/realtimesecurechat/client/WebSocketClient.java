@@ -8,16 +8,10 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import javax.crypto.Cipher;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.URI;
-import java.net.URL;
+import java.net.*;
 import java.security.*;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 @ClientEndpoint
 public class WebSocketClient {
@@ -72,6 +66,37 @@ public class WebSocketClient {
         }
     }
 
+    public static String getPrivateIP() {
+        try {
+            // Enumerate all network interfaces
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface networkInterface = interfaces.nextElement();
+
+                // Skip loopback and inactive interfaces
+                if (networkInterface.isLoopback() || !networkInterface.isUp()) {
+                    continue;
+                }
+
+                // Enumerate all IP addresses for the interface
+                Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress address = addresses.nextElement();
+
+                    // Check if the address is not a loopback and is an IPv4 address
+                    if (!address.isLoopbackAddress() && address instanceof java.net.Inet4Address) {
+                        return address.getHostAddress(); // Return the first private IPv4 address found
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "localhost"; // Fallback if no valid IP is found
+    }
+
+
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
@@ -84,7 +109,7 @@ public class WebSocketClient {
         //clientUserId = scanner.nextLine();
 
         try {
-            String hostAddress = getPublicIP(); // Fetch the machine's IP address
+            String hostAddress = getPrivateIP(); // Fetch the machine's IP address
             this.connectionDetails = hostAddress + ":" + peerSocketManager.getPort();
             System.out.println("Connection details: " + connectionDetails);
         } catch (Exception e) {
