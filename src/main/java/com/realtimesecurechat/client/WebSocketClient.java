@@ -56,14 +56,13 @@ public class WebSocketClient {
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
-        performRegistration();
         System.out.println("Connected to server: " + session.getId());
     }
 
-    private void performRegistration() {
+    public void performRegistration(String clientUserId) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter your client user ID: ");
-        clientUserId = scanner.nextLine();
+        //clientUserId = scanner.nextLine();
 
         try {
             String hostAddress = InetAddress.getLocalHost().getHostAddress(); // Fetch the machine's IP address
@@ -204,6 +203,12 @@ public class WebSocketClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendMessageToPeer(String userId, String message) {
+        // Example peer communication, assuming you already have peer connections established
+        System.out.println("Sending message to peer: " + userId + " - " + message);
+        //peerSocketManager.sendMessageToPeer(userId, message);
     }
 
     private String decryptMessage(String encryptedMessage) throws Exception {
