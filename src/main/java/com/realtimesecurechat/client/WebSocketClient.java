@@ -6,8 +6,12 @@ import jakarta.websocket.*;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.Cipher;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URI;
+import java.net.URL;
 import java.security.*;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
@@ -53,6 +57,21 @@ public class WebSocketClient {
         }
     }
 
+    public static String getPublicIP() {
+        try {
+            URL url = new URL("https://api.ipify.org");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String publicIP = reader.readLine();
+            reader.close();
+            return publicIP;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "localhost"; // Fallback
+        }
+    }
+
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
@@ -65,7 +84,7 @@ public class WebSocketClient {
         //clientUserId = scanner.nextLine();
 
         try {
-            String hostAddress = InetAddress.getLocalHost().getHostAddress(); // Fetch the machine's IP address
+            String hostAddress = getPublicIP(); // Fetch the machine's IP address
             this.connectionDetails = hostAddress + ":" + peerSocketManager.getPort();
             System.out.println("Connection details: " + connectionDetails);
         } catch (Exception e) {
