@@ -1,12 +1,18 @@
 package com.realtimesecurechat.client.peerCommunication;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.realtimesecurechat.client.utils.Crypto;
+
 import java.io.*;
 import java.net.Socket;
+import java.security.KeyPair;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PeerConnection {
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final String username;
     private final PublicKey publicKey;
     private final Socket socket;
@@ -14,8 +20,14 @@ public class PeerConnection {
     private final BufferedReader reader;
     private final List<String> conversationHistory;
     private volatile boolean listening; // Flag to control the listening thread
+    private PeerSocketManager peerSocketManager;
+    private MessageListener messageListener;
 
-    public PeerConnection(String username, PublicKey publicKey, Socket socket) throws IOException {
+    public void setMessageListener(MessageListener listener) {
+        this.messageListener = listener;
+    }
+
+    public PeerConnection(String username, PublicKey publicKey, Socket socket, PeerSocketManager peerSocketManager) throws IOException {
         this.username = username;
         this.publicKey = publicKey;
         this.socket = socket;
@@ -23,11 +35,8 @@ public class PeerConnection {
         this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.conversationHistory = new ArrayList<>();
         this.listening = true; // Start listening
+        this.peerSocketManager = peerSocketManager;
         startListening();
-    }
-
-    public PeerConnection(String username, PublicKey publicKey) throws IOException {
-        this(username, publicKey, new Socket());
     }
 
     public String getUsername() {
@@ -58,9 +67,25 @@ public class PeerConnection {
                 String message;
                 while (listening && (message = reader.readLine()) != null) {
                     System.out.println("Received from " + username + ": " + message);
-                    conversationHistory.add(username + ": " + message);
+                    // Decrypt the message using the private key
+                    String decryptedMessage = Crypto.decryptMessage(message, peerSocketManager.getKeyPair().getPrivate());
+
+                    // Verify the message
+                    if (!Crypto.verifyMessage(decryptedMessage, publicKey)) {
+                        System.err.println("Failed to verify message from " + username);
+                        continue;
+                    }
+                    System.out.println("Decrypted message: " + decryptedMessage);
+
+                    // Parse the decrypted message into JSON
+                    JsonNode messageNode = objectMapper.readTree(decryptedMessage);
+
+                    conversationHistory.add(username + ": " + messageNode.get("message").asText());
+                    if (messageListener != null) {
+                        messageListener.onMessageReceived(username, message);
+                    }
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 if (listening) { // Ignore exceptions during shutdown
                     System.err.println("Error in listening thread for " + username + ": " + e.getMessage());
                 }

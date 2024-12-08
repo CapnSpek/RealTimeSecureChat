@@ -66,8 +66,18 @@ public class ChatAppUI {
         frame.setJMenuBar(menuBar);
     }
 
+    public void onMessageReceived(String username, String message) {
+        SwingUtilities.invokeLater(() -> {
+            // Ensure the correct chat is updated
+            if (chatListPanel.getSelectedChat().equals(username)) {
+                chatPanel.appendMessage(username, message);
+            }
+        });
+    }
+
     private void onChatSelected(String username) {
         chatPanel.clearChat();
+        chatPanel.setRecipient(username); // Set the recipient in ChatPanel
         peerSocketManager.getChatHistory(username).forEach(chat -> {
             chatPanel.appendMessage("Peer", chat);
         });
@@ -78,7 +88,11 @@ public class ChatAppUI {
     }
 
     private void sendMessage(String message, String recipient) {
+        System.out.println("Clicked send message");
+        System.out.println("Recipient: " + recipient);
+        System.out.println("Message: " + message);
         if (recipient != null) {
+            System.out.println("Sending message to " + recipient);
             Message messageObj = new Message("chatMessage");
             messageObj.addField("message", message);
             messageObj.addField("toUserId", recipient);

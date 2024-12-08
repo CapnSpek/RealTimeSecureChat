@@ -49,6 +49,7 @@ public class ClientLauncher {
             // Launch UI
             ChatAppUI appUI = new ChatAppUI(webSocketClientToServer, peerSocketManager, clientToServerMessagesManager);
             peerSocketManager.setConnectionListener(appUI::onConnectionEstablished);
+            peerSocketManager.setMessageListener(appUI::onMessageReceived);
 
             System.out.println("Client setup complete!");
 

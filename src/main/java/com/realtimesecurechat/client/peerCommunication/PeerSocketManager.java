@@ -45,6 +45,12 @@ public class PeerSocketManager {
 
     private PeerConnectionListener connectionListener;
 
+    private MessageListener messageListener;
+
+    public void setMessageListener(MessageListener listener) {
+        this.messageListener = listener;
+    }
+
     public PeerSocketManager(int port, KeyPair keyPair) {
         this.port = port;
         this.keyPair = keyPair;
@@ -69,6 +75,9 @@ public class PeerSocketManager {
     public void addOutgoingRequest(String username) { outgoingConnectionRequests.add(username); }
     public void removeOutgoingRequest(String username) { outgoingConnectionRequests.remove(username); }
     public boolean hasOutgoingRequest(String username) { return outgoingConnectionRequests.contains(username); }
+
+    public KeyPair getKeyPair() { return keyPair; }
+    public PublicKey getConnectionPublicKey(String username) { return activeConnections.get(username).getPublicKey(); }
 
     // Start the server
     public void startServer() {
@@ -117,7 +126,12 @@ public class PeerSocketManager {
             System.out.println("Public key decoded for user: " + userId);
 
             // Create a peer connection and add it to active connections
-            PeerConnection connection = new PeerConnection(userId, publicKey, socket);
+            PeerConnection connection = new PeerConnection(userId, publicKey, socket, this);
+            connection.setMessageListener((username, message) -> {
+                if (messageListener != null) {
+                    messageListener.onMessageReceived(username, message);
+                }
+            });
             activeConnections.put(userId, connection);
             outgoingConnectionRequests.remove(userId);
             System.out.println("Added connection to active connections: " + userId);
@@ -178,7 +192,14 @@ public class PeerSocketManager {
             System.out.println("Signature verified for user: " + userId);
 
             // Add the connection to activeConnections
-            activeConnections.put(userId, new PeerConnection(userId, publicKey, clientSocket));
+            PeerConnection connection = new PeerConnection(userId, publicKey, clientSocket, this);
+            activeConnections.put(userId, connection);
+            incomingConnectionRequests.remove(userId);
+            connection.setMessageListener((username, message) -> {
+                if (messageListener != null) {
+                    messageListener.onMessageReceived(username, message);
+                }
+            });
             System.out.println("Connection established with user: " + userId);
 
             // Notify listener about the connection

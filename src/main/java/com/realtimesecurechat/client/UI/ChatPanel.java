@@ -8,6 +8,15 @@ public class ChatPanel extends JPanel {
     private final JTextArea chatArea;
     private final JTextField messageInput;
     private final JButton sendButton;
+    private String recipient; // Store the recipient
+
+    public void setRecipient(String recipient) {
+        this.recipient = recipient; // Set the recipient
+    }
+
+    public String getRecipient() {
+        return recipient; // Get the recipient
+    }
 
     public ChatPanel(BiConsumer<String, String> onSendMessage) {
         setLayout(new BorderLayout());
@@ -26,7 +35,7 @@ public class ChatPanel extends JPanel {
         sendButton.addActionListener(e -> {
             String message = messageInput.getText();
             if (!message.isEmpty()) {
-                onSendMessage.accept(message, chatArea.getName());
+                onSendMessage.accept(message, recipient); // Use the stored recipient
                 messageInput.setText("");
             }
         });
