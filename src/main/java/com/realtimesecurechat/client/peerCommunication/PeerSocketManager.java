@@ -160,9 +160,8 @@ public class PeerSocketManager {
             // Parse the decrypted message into JSON
             JsonNode messageNode = objectMapper.readTree(decryptedMessage);
 
-            // Extract userId and signature
+            // Extract userId
             String userId = messageNode.get("userId").asText();
-            String signature = messageNode.get("signature").asText();
             System.out.println("Received message from user: " + userId);
 
             // Retrieve the user's public key
@@ -176,7 +175,7 @@ public class PeerSocketManager {
 
             System.out.println(decryptedMessage);
             // Verify the signature
-            boolean isSignatureValid = Crypto.verifyMessage(decryptedMessage, signature, publicKey);
+            boolean isSignatureValid = Crypto.verifyMessage(decryptedMessage, publicKey);
             if (!isSignatureValid) {
                 System.err.println("Invalid signature for user " + userId + ". Rejecting connection.");
                 clientSocket.close();

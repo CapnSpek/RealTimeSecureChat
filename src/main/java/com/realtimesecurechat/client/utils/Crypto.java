@@ -57,11 +57,14 @@ public class Crypto {
         }
     }
 
-    public static boolean verifyMessage(String jsonMessage, String signature, PublicKey publicKey) {
+    public static boolean verifyMessage(String jsonMessage, PublicKey publicKey) {
         try {
             // Parse the JSON message
             JsonNode messageNode = objectMapper.readTree(jsonMessage);
             System.out.println("Entered verifyMessage");
+
+            // Extract the signature and the message
+            String signatureBase64 = messageNode.get("signature").asText();
 
             // Remove the "signature" field from the message
             ObjectNode messageWithoutSignature = (ObjectNode) messageNode.deepCopy();
@@ -72,7 +75,7 @@ public class Crypto {
             String messageToVerify = objectMapper.writeValueAsString(messageWithoutSignature);
 
             // Decode the Base64 signature
-            byte[] signatureBytes = Base64.getDecoder().decode(signature);
+            byte[] signatureBytes = Base64.getDecoder().decode(signatureBase64);
 
             // Initialize the Signature object for verification
             Signature verifier = Signature.getInstance("SHA256withECDSA");
