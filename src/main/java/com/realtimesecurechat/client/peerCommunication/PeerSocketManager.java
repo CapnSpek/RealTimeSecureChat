@@ -124,8 +124,9 @@ public class PeerSocketManager {
 
             // Create the first message using the Message class
             Message initialMessage = new Message("initialMessage")
-                    .addField("userId", this.userId)
-                    .addField("signature", "signature"); // Replace with the actual signature logic
+                    .addField("userId", this.userId);
+            String signature = Crypto.signMessage(initialMessage.toString(), keyPair.getPrivate());
+            initialMessage.addField("signature", signature);
             System.out.println("Sending initial message with userId, signature to user: " + userId);
 
             // Serialize the message to JSON
