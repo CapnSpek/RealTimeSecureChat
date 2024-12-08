@@ -50,6 +50,7 @@ public class PeerSocketManager {
         this.keyPair = keyPair;
         String privateIP = Network.getPrivateIP();
         connectionDetails = privateIP + ":" + port;
+        System.out.println("Connection details initialized at: " + connectionDetails);
     }
 
     public int getPort() {
@@ -141,6 +142,7 @@ public class PeerSocketManager {
 
             // Decrypt the message
             String decryptedMessage = Crypto.decryptMessage(encryptedMessage, keyPair.getPrivate());
+            System.out.println("Decrypted message: " + decryptedMessage);
 
             // Parse the decrypted message into JSON
             JsonNode messageNode = objectMapper.readTree(decryptedMessage);
@@ -202,6 +204,7 @@ public class PeerSocketManager {
 
             // Convert the updated message map back to JSON and send it
             String signedMessage = objectMapper.writeValueAsString(messageMap);
+            String signedMessageBase64 = Base64.getEncoder().encodeToString(signedMessage.getBytes());
             System.out.println("Signed message: " + signedMessage);
 
             // Get the connection for the user

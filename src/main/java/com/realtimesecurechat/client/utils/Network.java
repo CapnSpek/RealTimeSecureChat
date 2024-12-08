@@ -10,12 +10,14 @@ public class Network {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
                 NetworkInterface iface = interfaces.nextElement();
+                // Skip loopback and down interfaces
                 if (iface.isLoopback() || !iface.isUp()) continue;
 
                 Enumeration<InetAddress> addresses = iface.getInetAddresses();
                 while (addresses.hasMoreElements()) {
                     InetAddress addr = addresses.nextElement();
-                    if (addr.isSiteLocalAddress()) {
+                    // Filter for site-local IPv4 addresses only
+                    if (addr.isSiteLocalAddress() && addr instanceof java.net.Inet4Address) {
                         return addr.getHostAddress();
                     }
                 }
@@ -23,6 +25,7 @@ public class Network {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "127.0.0.1"; // Fallback
+        // Fallback to loopback if no address is found
+        return "127.0.0.1";
     }
 }
