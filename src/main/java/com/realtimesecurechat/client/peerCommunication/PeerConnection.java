@@ -82,7 +82,7 @@ public class PeerConnection {
 
                     conversationHistory.add(username + ": " + messageNode.get("message").asText());
                     if (messageListener != null) {
-                        messageListener.onMessageReceived(username, message);
+                        messageListener.onMessageReceived(username, messageNode.get("message").asText());
                     }
                 }
             } catch (Exception e) {

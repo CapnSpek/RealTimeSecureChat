@@ -69,7 +69,7 @@ public class ChatAppUI {
     public void onMessageReceived(String username, String message) {
         SwingUtilities.invokeLater(() -> {
             // Ensure the correct chat is updated
-            if (chatListPanel.getSelectedChat().equals(username)) {
+            if (username != null && chatListPanel.getSelectedChat().equals(username)) {
                 chatPanel.appendMessage(username, message);
             }
         });
