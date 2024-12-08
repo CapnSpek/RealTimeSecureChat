@@ -1,8 +1,12 @@
 package com.realtimesecurechat.client.utils;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
+import java.net.URL;
 
 public class Network {
     public static String getPrivateIP() {
@@ -27,5 +31,23 @@ public class Network {
         }
         // Fallback to loopback if no address is found
         return "127.0.0.1";
+    }
+
+    public static String getPublicIP() {
+        String publicIP = "Unable to retrieve public IP";
+        try {
+            URL url = new URL("https://api.ipify.org"); // Use ipify API
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000); // Timeout for connection
+            connection.setReadTimeout(5000);    // Timeout for reading data
+
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                publicIP = in.readLine(); // Public IP is the first line of the response
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return publicIP;
     }
 }
