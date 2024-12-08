@@ -11,10 +11,7 @@ import java.net.Socket;
 import java.net.InetAddress;
 import java.security.KeyPair;
 import java.security.PublicKey;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -122,24 +119,12 @@ public class PeerSocketManager {
             connectionListener.onConnectionEstablished(userId);
             System.out.println("Notified listener about connection with: " + userId);
 
-            // Create the first message using the Message class
+            // Send the initial message
             Message initialMessage = new Message("initialMessage")
-                    .addField("userId", this.userId);
-            String signature = Crypto.signMessage(initialMessage.toString(), keyPair.getPrivate());
-            initialMessage.addField("signature", signature);
-            System.out.println("Sending initial message with userId, signature to user: " + userId);
+                    .addField("userId", this.userId)
+                    .addField("toUserId", userId);
+            sendMessage(initialMessage);
 
-            // Serialize the message to JSON
-            ObjectMapper objectMapper = new ObjectMapper();
-            String jsonMessage = objectMapper.writeValueAsString(initialMessage.toMap());
-
-            // Encrypt the JSON message with the user's public key
-            String encryptedMessage = Crypto.encryptMessage(jsonMessage, publicKey);
-            System.out.println("Encrypted message to user: " + userId);
-
-            // Send the encrypted message through the socket
-            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-            writer.println(encryptedMessage);
             System.out.println("Sent encrypted message to user: " + userId);
         } catch (Exception e) {
             e.printStackTrace();
@@ -198,12 +183,38 @@ public class PeerSocketManager {
     }
 
     // Send a message to an active connection
-    public void sendMessage(String username, String message) {
-        PeerConnection connection = activeConnections.get(username);
-        if (connection != null) {
-            connection.sendMessage(message);
-        } else {
-            System.out.println("No active connection with: " + username);
+    public void sendMessage(Message message) {
+        try {
+            // Convert the message to a Map and sign the payload
+            Map<String, Object> messageMap = message.toMap();
+            System.out.println("Message map: " + messageMap);
+
+            String toUserId = messageMap.get("toUserId").toString();
+            messageMap.remove("toUserId");
+            System.out.println("Removed toUserId from message map: " + messageMap);
+
+            String payload = objectMapper.writeValueAsString(messageMap);
+            String signature = Crypto.signMessage(payload, keyPair.getPrivate());
+
+            // Add the signature to the message map
+            messageMap.put("signature", signature);
+            System.out.println("Signature added to message map: " + messageMap);
+
+            // Convert the updated message map back to JSON and send it
+            String signedMessage = objectMapper.writeValueAsString(messageMap);
+            System.out.println("Signed message: " + signedMessage);
+
+            // Get the connection for the user
+            PeerConnection connection = activeConnections.get(toUserId);
+            System.out.println("Connection: " + connection);
+
+            if (connection != null) {
+                connection.sendMessage(signedMessage);
+            } else {
+                System.out.println("No active connection with: " + toUserId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

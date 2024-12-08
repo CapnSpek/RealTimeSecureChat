@@ -3,6 +3,7 @@ package com.realtimesecurechat.client.UI;
 import com.realtimesecurechat.client.peerCommunication.PeerSocketManager;
 import com.realtimesecurechat.client.serverCommunication.ClientToServerMessagesManager;
 import com.realtimesecurechat.client.serverCommunication.WebSocketClientToServer;
+import com.realtimesecurechat.client.models.Message;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,7 +76,10 @@ public class ChatAppUI {
 
     private void sendMessage(String message, String recipient) {
         if (recipient != null) {
-            peerSocketManager.sendMessage(recipient, message);
+            Message messageObj = new Message("chatMessage");
+            messageObj.addField("message", message);
+            messageObj.addField("toUserId", recipient);
+            peerSocketManager.sendMessage(messageObj);
             chatPanel.appendMessage("Me", message);
         }
     }
