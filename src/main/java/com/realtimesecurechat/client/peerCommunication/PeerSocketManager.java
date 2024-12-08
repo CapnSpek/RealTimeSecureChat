@@ -25,6 +25,15 @@ public class PeerSocketManager {
     private ServerSocket serverSocket;
     private final String connectionDetails;
     private final KeyPair keyPair;
+    private String userId;
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -115,7 +124,7 @@ public class PeerSocketManager {
 
             // Create the first message using the Message class
             Message initialMessage = new Message("initialMessage")
-                    .addField("userId", userId)
+                    .addField("userId", this.userId)
                     .addField("signature", "signature"); // Replace with the actual signature logic
             System.out.println("Sending initial message with userId, signature to user: " + userId);
 
@@ -158,7 +167,7 @@ public class PeerSocketManager {
             // Retrieve the user's public key
             PublicKey publicKey = incomingConnectionRequests.get(userId);
             if (publicKey == null) {
-                System.err.println("Public key for user " + userId + " not found. Rejecting connection.");
+                System.out.println("Public key for user " + userId + " not found. Rejecting connection.");
                 clientSocket.close();
                 return;
             }
