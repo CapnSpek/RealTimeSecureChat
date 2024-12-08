@@ -31,6 +31,9 @@ public class ChatAppUI {
         chatListPanel = new ChatListPanel(this::onChatSelected);
         chatPanel = new ChatPanel(this::sendMessage);
 
+        // Set PeerSocketManager Listener
+        peerSocketManager.setConnectionListener(this::onConnectionEstablished);
+
         // Add Panels to Frame
         frame.add(chatListPanel, BorderLayout.WEST);
         frame.add(chatPanel, BorderLayout.CENTER);
@@ -66,12 +69,12 @@ public class ChatAppUI {
     private void onChatSelected(String username) {
         chatPanel.clearChat();
         peerSocketManager.getChatHistory(username).forEach(chat -> {
-            //chatPanel.appendMessage(chat.getSender(), chat.getMessage());
+            chatPanel.appendMessage("Peer", chat);
         });
     }
 
     public void onConnectionEstablished(String username) {
-        chatListPanel.addChat(username);
+        SwingUtilities.invokeLater(() -> chatListPanel.addChat(username));
     }
 
     private void sendMessage(String message, String recipient) {

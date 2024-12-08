@@ -93,6 +93,13 @@ public class PeerSocketManager {
         }
     }
 
+    // Notify the listener that a connection has been established
+    private void notifyConnectionEstablished(String username) {
+        if (connectionListener != null) {
+            connectionListener.onConnectionEstablished(username);
+        }
+    }
+
     public void connectToPeer(String userId, String connectionDetails, String publicKeyString) {
         try {
             // Parse connection details
@@ -117,7 +124,7 @@ public class PeerSocketManager {
             System.out.println("Removed from outgoing requests: " + userId);
 
             // Notify listener about the connection
-            connectionListener.onConnectionEstablished(userId);
+            notifyConnectionEstablished(userId);
             System.out.println("Notified listener about connection with: " + userId);
 
             // Send the initial message
@@ -173,6 +180,9 @@ public class PeerSocketManager {
             // Add the connection to activeConnections
             activeConnections.put(userId, new PeerConnection(userId, publicKey, clientSocket));
             System.out.println("Connection established with user: " + userId);
+
+            // Notify listener about the connection
+            notifyConnectionEstablished(userId);
         } catch (Exception e) {
             e.printStackTrace();
             try {
