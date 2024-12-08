@@ -39,6 +39,7 @@ public class Crypto {
 
     public static String decryptMessage(String encryptedMessage, PrivateKey privateKey) throws Exception {
         byte[] encryptedBytes = Base64.getDecoder().decode(encryptedMessage);
+        System.out.println("Base 64 Decoded encrypted message: " + encryptedMessage);
         Cipher cipher = Cipher.getInstance("ECIES", "BC");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
         byte[] decryptedBytes = cipher.doFinal(encryptedBytes);

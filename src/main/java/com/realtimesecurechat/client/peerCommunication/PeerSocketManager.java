@@ -214,6 +214,7 @@ public class PeerSocketManager {
 
             // Base 64 encode the message
             String signedMessageBase64 = Base64.getEncoder().encodeToString(encryptedMessage.getBytes());
+            System.out.println("Base 64 Encoded encrypted message: " + signedMessageBase64);
 
             // Get the connection for the user
             PeerConnection connection = activeConnections.get(toUserId);
