@@ -51,11 +51,14 @@ public class PeerConnection {
         return conversationHistory;
     }
 
-    public void sendMessage(String encryptedMessage, String message) {
+    public void addMyMessageToConversationHistory(String message) {
+        conversationHistory.add("Me: " + message);
+    }
+
+    public void sendMessage(String message) {
         try {
-            writer.write(encryptedMessage + "\n");
+            writer.write(message + "\n");
             writer.flush();
-            conversationHistory.add("Me: " + message);
         } catch (IOException e) {
             System.err.println("Failed to send message: " + e.getMessage());
         }

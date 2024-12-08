@@ -245,8 +245,11 @@ public class PeerSocketManager {
             PeerConnection connection = activeConnections.get(toUserId);
             System.out.println("Connection: " + connection);
 
+            if(messageMap.get("type").equals("chatMessage")) {
+                connection.addMyMessageToConversationHistory(messageMap.get("message").toString());
+            }
             if (connection != null) {
-                connection.sendMessage(encryptedMessage, messageMap.get("message").toString());
+                connection.sendMessage(encryptedMessage);
             } else {
                 System.out.println("No active connection with: " + toUserId);
             }
