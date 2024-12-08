@@ -173,6 +173,7 @@ public class PeerSocketManager {
             }
             System.out.println("Public key found for user: " + userId);
 
+            System.out.println(decryptedMessage);
             // Verify the signature
             boolean isSignatureValid = Crypto.verifyMessage(decryptedMessage, signature, publicKey);
             if (!isSignatureValid) {

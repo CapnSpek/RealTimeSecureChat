@@ -61,10 +61,12 @@ public class Crypto {
         try {
             // Parse the JSON message
             JsonNode messageNode = objectMapper.readTree(jsonMessage);
+            System.out.println("Entered verifyMessage");
 
             // Remove the "signature" field from the message
             ObjectNode messageWithoutSignature = (ObjectNode) messageNode.deepCopy();
             messageWithoutSignature.remove("signature");
+            System.out.println("Found message without signature");
 
             // Serialize the remaining message back to JSON
             String messageToVerify = objectMapper.writeValueAsString(messageWithoutSignature);
