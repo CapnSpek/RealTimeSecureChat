@@ -246,7 +246,7 @@ public class PeerSocketManager {
             System.out.println("Connection: " + connection);
 
             if (connection != null) {
-                connection.sendMessage(encryptedMessage);
+                connection.sendMessage(encryptedMessage, messageMap.get("message").toString());
             } else {
                 System.out.println("No active connection with: " + toUserId);
             }

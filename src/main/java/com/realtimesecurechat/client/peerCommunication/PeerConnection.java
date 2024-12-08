@@ -51,9 +51,9 @@ public class PeerConnection {
         return conversationHistory;
     }
 
-    public void sendMessage(String message) {
+    public void sendMessage(String encryptedMessage, String message) {
         try {
-            writer.write(message + "\n");
+            writer.write(encryptedMessage + "\n");
             writer.flush();
             conversationHistory.add("Me: " + message);
         } catch (IOException e) {
