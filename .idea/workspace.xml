@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="eba18265-2161-472f-a9c2-8663f1da85a6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/ChatListPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/ChatPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/ConnectToPeerDialog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/InitialDialogBox.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/peerCommunication/PeerConnection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/peerCommunication/PeerConnectionListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/peerCommunication/PeerSocketManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/ClientToServerMessagesManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/ServerMessageHandlerRegistry.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/WebSocketClientToServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/models/Message.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/utils/Crypto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/utils/Network.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/ChatAppUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/ChatAppUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/ClientLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/ClientLauncher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/PeerSocketManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UserIdInputUI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/WebSocketClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/server/WebSocketServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/server/WebSocketServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/utils/BiDirectionalMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/server/utils/BiDirectionalMap.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2pooSTxyCXKMFz5zZrU9r5YuXaO" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Client.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Server.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;socket__comm&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager" selected="Application.Client">
+    <configuration name="Client" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.realtimesecurechat.client.ClientLauncher" />
+      <module name="RealTimeSecureChat" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Server" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="temurin-21" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="com.realtimesecurechat.server.ServerLauncher" />
+      <module name="RealTimeSecureChat" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Server" />
+      <item itemvalue="Application.Client" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="eba18265-2161-472f-a9c2-8663f1da85a6" name="Changes" comment="" />
+      <created>1733441792089</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1733441792089</updated>
+    </task>
+    <servers />
+  </component>
+</project>
