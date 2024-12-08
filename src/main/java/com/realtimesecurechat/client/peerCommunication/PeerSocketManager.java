@@ -139,6 +139,7 @@ public class PeerSocketManager {
             System.out.println("Incoming connection from: " + clientSocket.getInetAddress());
             // Read the first encrypted message from the peer
             String encryptedMessage = reader.readLine();
+            System.out.println("Received encrypted message: " + encryptedMessage);
 
             // Decrypt the message
             String decryptedMessage = Crypto.decryptMessage(encryptedMessage, keyPair.getPrivate());
@@ -204,15 +205,17 @@ public class PeerSocketManager {
 
             // Convert the updated message map back to JSON and send it
             String signedMessage = objectMapper.writeValueAsString(messageMap);
-            String signedMessageBase64 = Base64.getEncoder().encodeToString(signedMessage.getBytes());
             System.out.println("Signed message: " + signedMessage);
+
+            // Base 64 encode the message
+            String signedMessageBase64 = Base64.getEncoder().encodeToString(signedMessage.getBytes());
 
             // Get the connection for the user
             PeerConnection connection = activeConnections.get(toUserId);
             System.out.println("Connection: " + connection);
 
             if (connection != null) {
-                connection.sendMessage(signedMessage);
+                connection.sendMessage(signedMessageBase64);
             } else {
                 System.out.println("No active connection with: " + toUserId);
             }
