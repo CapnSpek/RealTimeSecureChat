@@ -203,12 +203,17 @@ public class PeerSocketManager {
             messageMap.put("signature", signature);
             System.out.println("Signature added to message map: " + messageMap);
 
-            // Convert the updated message map back to JSON and send it
+            // Convert the updated message map back to JSON
             String signedMessage = objectMapper.writeValueAsString(messageMap);
             System.out.println("Signed message: " + signedMessage);
 
+            // Encrypt the message
+            PublicKey publicKey = activeConnections.get(toUserId).getPublicKey();
+            String encryptedMessage = Crypto.encryptMessage(signedMessage, publicKey);
+            System.out.println("Encrypted message: " + encryptedMessage);
+
             // Base 64 encode the message
-            String signedMessageBase64 = Base64.getEncoder().encodeToString(signedMessage.getBytes());
+            String signedMessageBase64 = Base64.getEncoder().encodeToString(encryptedMessage.getBytes());
 
             // Get the connection for the user
             PeerConnection connection = activeConnections.get(toUserId);
