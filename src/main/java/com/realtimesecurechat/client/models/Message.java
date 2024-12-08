@@ -1,4 +1,4 @@
-package com.realtimesecurechat.client.serverCommunication.models;
+package com.realtimesecurechat.client.models;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package com.realtimesecurechat.client.serverCommunication;
 
-import com.realtimesecurechat.client.serverCommunication.models.Message;
+import com.realtimesecurechat.client.models.Message;
 import com.realtimesecurechat.client.peerCommunication.PeerSocketManager;
 import com.realtimesecurechat.client.utils.Crypto;
 
@@ -31,18 +31,19 @@ public class ClientToServerMessagesManager {
        JSON format:
        {
            "messageType": "Connection request",
-           "toUserId": "username"
+           "targetUserId": "username"
        }
      */
     public void sendConnectionRequest(String userId) {
         // Create the connection request message using the Message class
         Message connectionRequestMessage = new Message("Connection request")
-                .addField("toUserId", userId);
+                .addField("targetUserId", userId);
 
         // Send the connection request message
         webSocketClientToServer.sendMessage(connectionRequestMessage);
         peerSocketManager.addOutgoingRequest(userId);
         System.out.println("Sent connection request to: " + userId);
+        System.out.println("Added to outgoing requests set: " + userId);
     }
 
     /* Approve a connection request
@@ -72,6 +73,8 @@ public class ClientToServerMessagesManager {
 
         // Send the approval message
         webSocketClientToServer.sendMessage(approvalMessage);
+
+        System.out.println("Connection details: " + connectionDetails);
         System.out.println("Approved connection for: " + requesterUserId);
     }
 

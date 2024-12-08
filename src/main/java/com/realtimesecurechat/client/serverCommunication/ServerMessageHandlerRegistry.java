@@ -54,6 +54,7 @@ public class ServerMessageHandlerRegistry {
         String publicKeyStr = json.get("requesterPublicKey").asText();
         peerSocketManager.addIncomingConnectionRequest(userId, Crypto.decodeKey(publicKeyStr));
         System.out.println("Received connection request from: " + userId);
+        System.out.println("Added to incoming requests map: " + userId + " -> " + publicKeyStr);
 
         // Send an approval message to the requester
         clientToServerMessagesManager.approveConnection(userId);
@@ -74,6 +75,8 @@ public class ServerMessageHandlerRegistry {
             String userId = json.get("user").asText();
             String connectionDetails = Crypto.decryptMessage(json.get("connectionDetails").asText(), keyPair.getPrivate());
             String publicKeyStr = json.get("publicKey").asText();
+            System.out.println("Received approval from: " + userId);
+            System.out.println("Connection details: " + connectionDetails);
             peerSocketManager.connectToPeer(userId, connectionDetails, publicKeyStr);
         } catch (Exception e) {
             e.printStackTrace();

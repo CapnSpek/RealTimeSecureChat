@@ -3,6 +3,7 @@ package com.realtimesecurechat.client.peerCommunication;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.realtimesecurechat.client.utils.Network;
 import com.realtimesecurechat.client.utils.Crypto;
+import com.realtimesecurechat.client.models.Message;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -87,15 +88,50 @@ public class PeerSocketManager {
 
     public void connectToPeer(String userId, String connectionDetails, String publicKeyString) {
         try {
+            // Parse connection details
             String[] parts = connectionDetails.split(":");
             String host = parts[0];
             int port = Integer.parseInt(parts[1]);
+            System.out.println("Connecting to peer at: " + host + ":" + port);
+
+            // Establish socket connection
             Socket socket = new Socket(host, port);
+            System.out.println("Connected to peer at: " + host + ":" + port);
+
+            // Decode the user's public key
             PublicKey publicKey = Crypto.decodeKey(publicKeyString);
+            System.out.println("Public key decoded for user: " + userId);
+
+            // Create a peer connection and add it to active connections
             PeerConnection connection = new PeerConnection(userId, publicKey, socket);
             activeConnections.put(userId, connection);
+            outgoingConnectionRequests.remove(userId);
+            System.out.println("Added connection to active connections: " + userId);
+            System.out.println("Removed from outgoing requests: " + userId);
+
+            // Notify listener about the connection
             connectionListener.onConnectionEstablished(userId);
-        } catch (IOException e) {
+            System.out.println("Notified listener about connection with: " + userId);
+
+            // Create the first message using the Message class
+            Message initialMessage = new Message("initialMessage")
+                    .addField("userId", userId)
+                    .addField("signature", "signature"); // Replace with the actual signature logic
+            System.out.println("Sending initial message with userId, signature to user: " + userId);
+
+            // Serialize the message to JSON
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonMessage = objectMapper.writeValueAsString(initialMessage.toMap());
+
+            // Encrypt the JSON message with the user's public key
+            String encryptedMessage = Crypto.encryptMessage(jsonMessage, publicKey);
+            System.out.println("Encrypted message to user: " + userId);
+
+            // Send the encrypted message through the socket
+            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+            writer.println(encryptedMessage);
+            System.out.println("Sent encrypted message to user: " + userId);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -104,6 +140,7 @@ public class PeerSocketManager {
         try (
                 BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))
         ) {
+            System.out.println("Incoming connection from: " + clientSocket.getInetAddress());
             // Read the first encrypted message from the peer
             String encryptedMessage = reader.readLine();
 
@@ -116,6 +153,7 @@ public class PeerSocketManager {
             // Extract userId and signature
             String userId = messageNode.get("userId").asText();
             String signature = messageNode.get("signature").asText();
+            System.out.println("Received message from user: " + userId);
 
             // Retrieve the user's public key
             PublicKey publicKey = incomingConnectionRequests.get(userId);
@@ -124,6 +162,7 @@ public class PeerSocketManager {
                 clientSocket.close();
                 return;
             }
+            System.out.println("Public key found for user: " + userId);
 
             // Verify the signature
             boolean isSignatureValid = Crypto.verifyMessage(decryptedMessage, signature, publicKey);
@@ -132,6 +171,7 @@ public class PeerSocketManager {
                 clientSocket.close();
                 return;
             }
+            System.out.println("Signature verified for user: " + userId);
 
             // Add the connection to activeConnections
             activeConnections.put(userId, new PeerConnection(userId, publicKey, clientSocket));

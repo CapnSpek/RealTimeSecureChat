@@ -185,6 +185,7 @@ public class WebSocketServer {
         String approvingUserId = null;
         String requesterUserId = null;
         String connectionDetails = null;
+        String approvingUserPublicKeyStr = null;
         boolean success = false; // Flag to indicate if the operation was successful
 
         try {
@@ -198,6 +199,14 @@ public class WebSocketServer {
             // Extract requester user ID and connection details from the JSON message
             requesterUserId = jsonMessage.get("requesterUserId").asText();
             connectionDetails = jsonMessage.get("connectionDetails").asText();
+
+            // Get the request approver's public key
+            PublicKey approvingUserPublicKey = clientUserIdToPublicKey.get(approvingUserId);
+            approvingUserPublicKeyStr = Base64.getEncoder().encodeToString(approvingUserPublicKey.getEncoded());
+            if (approvingUserPublicKeyStr == null) {
+                System.out.println("Connection approval failed: Approving user public key not found. Approver: " + approvingUserId + ", Requester: " + requesterUserId);
+                return;
+            }
 
             // Check if the requester exists in the set of users who requested connection to the approving user
             Set<String> requesterSet = connectionRequests.get(approvingUserId);
@@ -220,7 +229,7 @@ public class WebSocketServer {
             }
 
             // Send approval message to the requester
-            sendApprovalMessage(requesterSession, approvingUserId, connectionDetails);
+            sendApprovalMessage(requesterSession, approvingUserId, connectionDetails, approvingUserPublicKeyStr);
             System.out.println("Forwarded connection approval from " + approvingUserId + " to " + requesterUserId);
 
             success = true; // Mark operation as successful
@@ -299,11 +308,12 @@ public class WebSocketServer {
      * "connectionDetails": "Encrypted connection details"
      * }
      */
-    private void sendApprovalMessage(Session requesterSession, String approvingUserId, String connectionDetails) throws IOException {
+    private void sendApprovalMessage(Session requesterSession, String approvingUserId, String connectionDetails, String publicKeyStr) throws IOException {
         String approvalJson = objectMapper.writeValueAsString(
                 Map.of("messageType", "Approval",
                         "user", approvingUserId,
-                        "connectionDetails", connectionDetails)
+                        "connectionDetails", connectionDetails,
+                        "publicKey", publicKeyStr)
         );
         sendEncryptedMessage(requesterSession, approvalJson);
     }

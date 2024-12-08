@@ -3,7 +3,6 @@ package com.realtimesecurechat.client.UI;
 import com.realtimesecurechat.client.peerCommunication.PeerSocketManager;
 import com.realtimesecurechat.client.serverCommunication.ClientToServerMessagesManager;
 import com.realtimesecurechat.client.serverCommunication.WebSocketClientToServer;
-import com.realtimesecurechat.client.serverCommunication.models.Message;
 
 import javax.swing.*;
 import java.awt.*;

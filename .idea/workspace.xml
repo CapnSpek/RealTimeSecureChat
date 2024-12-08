@@ -5,26 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eba18265-2161-472f-a9c2-8663f1da85a6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/ChatListPanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/ChatPanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/ConnectToPeerDialog.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/InitialDialogBox.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/peerCommunication/PeerConnection.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/peerCommunication/PeerConnectionListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/peerCommunication/PeerSocketManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/ClientToServerMessagesManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/ServerMessageHandlerRegistry.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/WebSocketClientToServer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/models/Message.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/utils/Crypto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/utils/Network.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/ChatAppUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/ChatAppUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/ClientLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/ClientLauncher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/PeerSocketManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UserIdInputUI.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/WebSocketClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/ChatAppUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/ChatAppUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/peerCommunication/PeerSocketManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/peerCommunication/PeerSocketManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/ClientToServerMessagesManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/ClientToServerMessagesManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/ServerMessageHandlerRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/ServerMessageHandlerRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/WebSocketClientToServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/WebSocketClientToServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/models/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/models/Message.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/server/WebSocketServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/server/WebSocketServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/utils/BiDirectionalMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/server/utils/BiDirectionalMap.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,15 +39,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Client.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Server.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;socket__comm&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Client.executor": "Run",
+    "Application.Server.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "refactored__code",
+    "kotlin-language-version-configured": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Application.Client">
     <configuration name="Client" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="com.realtimesecurechat.client.ClientLauncher" />

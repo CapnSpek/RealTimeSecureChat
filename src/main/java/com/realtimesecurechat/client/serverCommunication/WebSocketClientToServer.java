@@ -2,7 +2,7 @@ package com.realtimesecurechat.client.serverCommunication;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.realtimesecurechat.client.serverCommunication.models.Message;
+import com.realtimesecurechat.client.models.Message;
 import com.realtimesecurechat.client.utils.Crypto;
 import jakarta.websocket.*;
 import java.util.Map;
