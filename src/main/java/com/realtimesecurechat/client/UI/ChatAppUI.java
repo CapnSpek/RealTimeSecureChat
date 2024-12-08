@@ -82,7 +82,9 @@ public class ChatAppUI {
         chatPanel.clearChat();
         chatPanel.setRecipient(username); // Set the recipient in ChatPanel
         peerSocketManager.getChatHistory(username).forEach(chat -> {
-            chatPanel.appendMessage("Peer", chat);
+            String peer = chat.split(":")[0];
+            String chatMessage = chat.split(":")[1];
+            chatPanel.appendMessage(peer, chatMessage);
         });
     }
 
