@@ -133,9 +133,9 @@ public class PeerSocketManager {
     }
 
     private void handleIncomingConnection(Socket clientSocket) {
-        try (
-                BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))
-        ) {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
             System.out.println("Incoming connection from: " + clientSocket.getInetAddress());
             // Read the first encrypted message from the peer
             String encryptedMessage = reader.readLine();
@@ -156,17 +156,16 @@ public class PeerSocketManager {
             PublicKey publicKey = incomingConnectionRequests.get(userId);
             if (publicKey == null) {
                 System.out.println("Public key for user " + userId + " not found. Rejecting connection.");
-                clientSocket.close();
+                clientSocket.close(); // Close the socket if not authorized
                 return;
             }
             System.out.println("Public key found for user: " + userId);
 
-            System.out.println(decryptedMessage);
             // Verify the signature
             boolean isSignatureValid = Crypto.verifyMessage(decryptedMessage, publicKey);
             if (!isSignatureValid) {
                 System.err.println("Invalid signature for user " + userId + ". Rejecting connection.");
-                clientSocket.close();
+                clientSocket.close(); // Close the socket if signature is invalid
                 return;
             }
             System.out.println("Signature verified for user: " + userId);
@@ -174,7 +173,6 @@ public class PeerSocketManager {
             // Add the connection to activeConnections
             activeConnections.put(userId, new PeerConnection(userId, publicKey, clientSocket));
             System.out.println("Connection established with user: " + userId);
-
         } catch (Exception e) {
             e.printStackTrace();
             try {

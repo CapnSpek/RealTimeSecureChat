@@ -82,8 +82,6 @@ public class Crypto {
             verifier.initVerify(publicKey);
             verifier.update(messageToVerify.getBytes());
 
-            System.out.println("message verification: " + verifier.verify(signatureBytes));
-
             // Verify the signature
             return verifier.verify(signatureBytes);
 

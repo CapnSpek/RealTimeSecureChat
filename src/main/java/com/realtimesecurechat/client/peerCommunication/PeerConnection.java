@@ -50,16 +50,25 @@ public class PeerConnection {
         }
     }
 
-    private void startListening() {
+    private void startListening(Socket clientSocket, BufferedReader reader, String userId) {
         new Thread(() -> {
             try {
                 String message;
                 while ((message = reader.readLine()) != null) {
-                    System.out.println("Received from " + username + ": " + message);
-                    conversationHistory.add(username + ": " + message);
+                    System.out.println("Received from " + userId + ": " + message);
+                    conversationHistory.add(userId + ": " + message);
                 }
             } catch (IOException e) {
+                System.out.println("Connection lost for user: " + userId);
                 e.printStackTrace();
+            } finally {
+                try {
+                    clientSocket.close();
+                    // activeConnections.remove(userId);
+                    System.out.println("Connection closed for user: " + userId);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }).start();
     }
