@@ -1,6 +1,9 @@
 package com.realtimesecurechat.client.UI;
 
-import javax.swing.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+
+import java.util.Optional;
 
 public class ConnectionRequestDialog {
     public enum UserResponse {
@@ -16,20 +19,31 @@ public class ConnectionRequestDialog {
     }
 
     public UserResponse showDialog() {
-        int response = JOptionPane.showConfirmDialog(
-                null,
-                "Connection request from: " + userId + "\nDo you want to accept?",
-                "Connection Request",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE
-        );
+        // Create an Alert dialog
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Connection Request");
+        alert.setHeaderText("Connection Request from: " + userId);
+        alert.setContentText("Do you want to accept the connection request?");
 
-        if (response == JOptionPane.YES_OPTION) {
-            return UserResponse.ACCEPT;
-        } else if (response == JOptionPane.NO_OPTION) {
-            return UserResponse.REJECT;
-        } else {
-            return UserResponse.NO_RESPONSE;
+        // Customize buttons
+        ButtonType acceptButton = new ButtonType("Accept");
+        ButtonType rejectButton = new ButtonType("Reject");
+        ButtonType cancelButton = new ButtonType("Cancel");
+
+        // Set buttons on the dialog
+        alert.getButtonTypes().setAll(acceptButton, rejectButton, cancelButton);
+
+        // Show the dialog and wait for user input
+        Optional<ButtonType> result = alert.showAndWait();
+
+        // Determine the user response
+        if (result.isPresent()) {
+            if (result.get() == acceptButton) {
+                return UserResponse.ACCEPT;
+            } else if (result.get() == rejectButton) {
+                return UserResponse.REJECT;
+            }
         }
+        return UserResponse.NO_RESPONSE; // Default if no response or cancel
     }
 }

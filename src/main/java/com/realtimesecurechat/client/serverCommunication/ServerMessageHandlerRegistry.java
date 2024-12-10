@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.realtimesecurechat.client.peerCommunication.PeerSocketManager;
 import com.realtimesecurechat.client.utils.Crypto;
 import com.realtimesecurechat.client.UI.ConnectionRequestDialog;
+import javafx.application.Platform;
 
 import java.security.KeyPair;
 import java.util.HashMap;
@@ -54,11 +55,35 @@ public class ServerMessageHandlerRegistry {
         String userId = json.get("fromUserId").asText();
         String publicKeyStr = json.get("requesterPublicKey").asText();
 
-        // Use the ConnectionRequestDialog class
-        ConnectionRequestDialog dialog = new ConnectionRequestDialog(userId);
-        ConnectionRequestDialog.UserResponse userResponse = dialog.showDialog();
+        // Use a lock to wait for the JavaFX dialog result
+        final Object lock = new Object();
+        final ConnectionRequestDialog.UserResponse[] userResponse = new ConnectionRequestDialog.UserResponse[1];
 
-        switch (userResponse) {
+        // Initialize the JavaFX platform if not already started
+        Platform.startup(() -> {});
+
+        // Ensure the dialog is shown on the JavaFX Application Thread
+        javafx.application.Platform.runLater(() -> {
+            ConnectionRequestDialog dialog = new ConnectionRequestDialog(userId);
+            userResponse[0] = dialog.showDialog();
+
+            // Notify the main thread that the dialog is complete
+            synchronized (lock) {
+                lock.notify();
+            }
+        });
+
+        // Wait for the dialog to complete
+        synchronized (lock) {
+            try {
+                lock.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Process the result after the dialog is complete
+        switch (userResponse[0]) {
             case ACCEPT:
                 System.out.println("Connection request accepted for: " + userId);
                 peerSocketManager.addIncomingConnectionRequest(userId, Crypto.decodeKey(publicKeyStr));

@@ -6,6 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="eba18265-2161-472f-a9c2-8663f1da85a6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/ClientLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/ClientLauncher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/ConnectToPeerDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/ConnectToPeerDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/ConnectionRequestDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/UI/ConnectionRequestDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/ServerMessageHandlerRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/realtimesecurechat/client/serverCommunication/ServerMessageHandlerRegistry.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -16,8 +20,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
