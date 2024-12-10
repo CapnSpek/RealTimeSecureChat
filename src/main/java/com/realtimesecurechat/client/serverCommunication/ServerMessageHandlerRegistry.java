@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.realtimesecurechat.client.peerCommunication.PeerSocketManager;
 import com.realtimesecurechat.client.utils.Crypto;
+import com.realtimesecurechat.client.UI.ConnectionRequestDialog;
 
 import java.security.KeyPair;
 import java.util.HashMap;
@@ -52,12 +53,27 @@ public class ServerMessageHandlerRegistry {
     private void handleConnectionRequest(JsonNode json, PeerSocketManager peerSocketManager) {
         String userId = json.get("fromUserId").asText();
         String publicKeyStr = json.get("requesterPublicKey").asText();
-        peerSocketManager.addIncomingConnectionRequest(userId, Crypto.decodeKey(publicKeyStr));
-        System.out.println("Received connection request from: " + userId);
-        System.out.println("Added to incoming requests map: " + userId + " -> " + publicKeyStr);
 
-        // Send an approval message to the requester
-        clientToServerMessagesManager.approveConnection(userId);
+        // Use the ConnectionRequestDialog class
+        ConnectionRequestDialog dialog = new ConnectionRequestDialog(userId);
+        ConnectionRequestDialog.UserResponse userResponse = dialog.showDialog();
+
+        switch (userResponse) {
+            case ACCEPT:
+                System.out.println("Connection request accepted for: " + userId);
+                peerSocketManager.addIncomingConnectionRequest(userId, Crypto.decodeKey(publicKeyStr));
+                clientToServerMessagesManager.approveConnection(userId);
+                break;
+
+            case REJECT:
+                System.out.println("Connection request rejected for: " + userId);
+                clientToServerMessagesManager.rejectConnection(userId);
+                break;
+
+            case NO_RESPONSE:
+                System.out.println("No response for connection request from: " + userId);
+                break;
+        }
     }
 
     /*
